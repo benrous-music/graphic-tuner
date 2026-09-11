@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import App from "./App";
 
-export default async function index() {
+export default function index() {
   return (
     <View>
-      <Text>Hello world</Text>
+      <App/>
     </View>
   )
 }
