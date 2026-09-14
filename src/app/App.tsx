@@ -1,66 +1,38 @@
-import {
-  AudioModule,
-  RecordingPresets,
-  setAudioModeAsync,
-  useAudioRecorder,
-  useAudioRecorderState
-} from 'expo-audio';
-import { useEffect } from 'react';
-import { Alert, Button, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import AudioProcessor from '../pitch-processing/audio-processor';
 
 export default function App() {
-  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
-  const recorderState = useAudioRecorderState(audioRecorder);
-  
-  
-  const record = async () => {
-    await setAudioModeAsync({
-      playsInSilentMode: true,
-      allowsRecording: true,
-      interruptionMode: 'doNotMix'
-    });
+  const [freq, setFreq] = useState<number>()
 
-    await audioRecorder.prepareToRecordAsync();
-    audioRecorder.record();
+  const processor = new AudioProcessor()
+  processor.onNoteDetected = (frequency: number) => {
+    setFreq(Math.round(frequency))
+  }
 
-    
-  };
-  
-  const stopRecording = async () => {
-    // The recording will be available on `audioRecorder.uri`.
-    await audioRecorder.stop();
-  };
-  
-  useEffect(() => {
-    (async () => {
-      const status = await AudioModule.requestRecordingPermissionsAsync();
-      if (!status.granted) {
-        Alert.alert('Permission to access microphone was denied');
-      }
-      
-      setAudioModeAsync({
-        playsInSilentMode: true,
-        allowsRecording: true,
-      });
-    })();
-  }, []);
-
-
+  function toggleMic() {
+    if (!processor.isRunning) { processor.start() }
+    else { processor.stop() }
+  }
 
   return (
     <View style={styles.container}>
-      <Button
-        title={recorderState.isRecording ? 'Stop Recording' : 'Start Recording'}
-        onPress={recorderState.isRecording ? stopRecording : record}
-      />
+      <Button title="Start" onPress={() => toggleMic()}/>
+      <View>
+        <Text>
+          {freq} hz
+        </Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: 'column',
+    height: '100%',
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#ecf0f1',
     padding: 10,
   },
