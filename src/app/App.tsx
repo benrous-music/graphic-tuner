@@ -19,16 +19,11 @@ export default function App() {
   
         source.connect(analyser)
         analyser.connect(audioContext.destination)
-        analyser.fftSize = 2048
-    
+
         let bufferLength = analyser.frequencyBinCount
-        // let frequencyData = new Uint8Array(bufferLength)
-        let timeFreqData = new Float32Array(bufferLength)
         let timeDomainData = new Float32Array(bufferLength)
   
         setInterval(() => {
-          // analyser.getByteFrequencyData(frequencyData)
-          analyser.getFloatFrequencyData(timeFreqData)
           analyser.getFloatTimeDomainData(timeDomainData)
 
           const freq = yin(timeDomainData, { fs: audioContext.sampleRate })?.freq
