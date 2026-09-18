@@ -40,9 +40,9 @@ export class EqualTemperamentIntonation {
     else if (intonation > 0) { intonationDirection = "sharp"}
 
     return {
-      pitchClass: Object.keys(this.PITCHES)[pitchIndex],
+      pitchClass: this.PITCHES[pitchIndex],
       octave: octaveLabel,
-      intonation: intonation,
+      intonation: Math.abs(intonation),
       intonationDirection: intonationDirection
     }
   }
