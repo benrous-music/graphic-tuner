@@ -8,6 +8,10 @@ import { StyleSheet, Text, View } from 'react-native';
 const DECIMAL_PLACES = 2
 const intonation = new EqualTemperamentIntonation(440)
 
+function precision(n: number): number {
+  return Math.round(n * (10 ** DECIMAL_PLACES)) / (10 ** DECIMAL_PLACES)
+}
+
 export default function App() {
   const [freq, setFreq] = useState<number>()
   const [pitch, setPitch] = useState<Pitch>()
@@ -31,10 +35,7 @@ export default function App() {
 
           const freq = yin(timeDomainData, { fs: audioContext.sampleRate })?.freq
           
-          setFreq(
-            Math.round((freq ?? 0) * (10 ** DECIMAL_PLACES)) / (10 ** DECIMAL_PLACES)  
-          )
-
+          setFreq(freq ?? 0)
           setPitch(freq ? intonation.calculateIntonation(freq) : undefined)
         }, 50)
       })
@@ -47,8 +48,21 @@ export default function App() {
     <View style={styles.container}>
       <View>
         <View style={styles.text}>
-          <Text>{freq}</Text>
+          <Text>{freq ? precision(freq) : ""}</Text>
           <Text>hz</Text>
+        </View>
+        <View style={styles.text}>
+          <Text>{pitch?.pitchClass}{pitch?.octave}</Text>
+        </View>
+        <View style={styles.text}>
+          {
+            pitch?.intonation && (
+              <>
+                <Text>{precision(pitch.intonation)}</Text>
+                <Text>cents {pitch.intonationDirection}</Text>
+              </>
+            )
+          }
         </View>
       </View>
     </View>
@@ -65,7 +79,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
-    width: 80,
+    width: 120,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
