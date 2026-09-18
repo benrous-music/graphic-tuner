@@ -3,7 +3,6 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
-    "@edkimmel/expo-audio-stream": "^1.1.1",
     "@expo/ui": "~57.0.16",
     "expo": "~57.0.20",
     "expo-audio": "~57.0.4",
