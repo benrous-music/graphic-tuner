@@ -1,13 +1,16 @@
 import yin from '@/pitch-processing/audiojs-yin';
+import { EqualTemperamentIntonation } from '@/pitch-processing/tuning/tune';
+import { Pitch } from '@/pitch-processing/tuning/types';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 
 const DECIMAL_PLACES = 2
-
+const intonation = new EqualTemperamentIntonation(440)
 
 export default function App() {
   const [freq, setFreq] = useState<number>()
+  const [pitch, setPitch] = useState<Pitch>()
 
   useEffect(() => {
     navigator.mediaDevices
@@ -31,6 +34,8 @@ export default function App() {
           setFreq(
             Math.round((freq ?? 0) * (10 ** DECIMAL_PLACES)) / (10 ** DECIMAL_PLACES)  
           )
+
+          setPitch(freq ? intonation.calculateIntonation(freq) : undefined)
         }, 50)
       })
       .catch(error => {

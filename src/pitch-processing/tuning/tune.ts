@@ -1,3 +1,5 @@
+import { Pitch } from "./types"
+
 export class EqualTemperamentIntonation {
   PITCH_CLASS_MIN: number = -50
   PITCH_CLASS_MAX: number = 49.999
@@ -12,7 +14,7 @@ export class EqualTemperamentIntonation {
 
   private _intervalToCents(f1: number, f2: number): number { return 1200 * Math.log2(f2 / f1) }
 
-  calculateIntonation(f: number) {
+  calculateIntonation(f: number): Pitch {
     let cents = this._intervalToCents(this.A, f)
     let octaveLabel = 4
 
