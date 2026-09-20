@@ -1,70 +1,16 @@
-import yin from '@/pitch-processing/audiojs-yin';
 import { EqualTemperamentIntonation } from '@/pitch-processing/tuning/tune';
 import { Pitch } from '@/pitch-processing/tuning/types';
-import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-
-const DECIMAL_PLACES = 2
-const intonation = new EqualTemperamentIntonation(440)
-
-function precision(n: number): number {
-  return Math.round(n * (10 ** DECIMAL_PLACES)) / (10 ** DECIMAL_PLACES)
-}
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import PitchReadout from './pitch-readout';
 
 export default function App() {
-  const [freq, setFreq] = useState<number>()
-  const [pitch, setPitch] = useState<Pitch>()
-
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({audio: true})
-      .then(localMediaStream => {
-        let audioContext = new AudioContext()
-        let source = audioContext.createMediaStreamSource(localMediaStream)
-        let analyser = audioContext.createAnalyser()
-  
-        source.connect(analyser)
-        analyser.connect(audioContext.destination)
-
-        let bufferLength = analyser.frequencyBinCount
-        let timeDomainData = new Float32Array(bufferLength)
-  
-        setInterval(() => {
-          analyser.getFloatTimeDomainData(timeDomainData)
-
-          const freq = yin(timeDomainData, { fs: audioContext.sampleRate })?.freq
-          
-          setFreq(freq ?? 0)
-          setPitch(freq ? intonation.calculateIntonation(freq) : undefined)
-        }, 50)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }, [])
+  const intonation = new EqualTemperamentIntonation(440)
+  const [pitch, setPitch] = useState<Pitch>(intonation.calculateIntonation(-1))
 
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.text}>
-          <Text>{freq ? precision(freq) : ""}</Text>
-          <Text>hz</Text>
-        </View>
-        <View style={styles.text}>
-          <Text>{pitch?.pitchClass}{pitch?.octave}</Text>
-        </View>
-        <View style={styles.text}>
-          {
-            pitch?.intonation && (
-              <>
-                <Text>{precision(pitch.intonation)}</Text>
-                <Text>cents {pitch.intonationDirection}</Text>
-              </>
-            )
-          }
-        </View>
-      </View>
+      <PitchReadout intonation={intonation} pitch={pitch} setPitch={setPitch}/>
     </View>
   );
 }
@@ -77,11 +23,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ecf0f1',
     padding: 10,
-  },
-  text: {
-    width: 120,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
   }
 });

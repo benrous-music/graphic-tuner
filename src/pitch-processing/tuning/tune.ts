@@ -15,6 +15,17 @@ export class EqualTemperamentIntonation {
   private _intervalToCents(f1: number, f2: number): number { return 1200 * Math.log2(f2 / f1) }
 
   calculateIntonation(f: number): Pitch {
+    if (f === -1) {
+      return {
+        frequency: f,
+        pitchClass: "",
+        octave: -1,
+        intonation: -51,
+        intonationDirection: ""
+      }
+    }
+
+
     let cents = this._intervalToCents(this.A, f)
     let octaveLabel = 4
 
@@ -40,6 +51,7 @@ export class EqualTemperamentIntonation {
     else if (intonation > 0) { intonationDirection = "sharp"}
 
     return {
+      frequency: f,
       pitchClass: this.PITCHES[pitchIndex],
       octave: octaveLabel,
       intonation: Math.abs(intonation),
