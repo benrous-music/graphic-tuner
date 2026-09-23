@@ -12,7 +12,7 @@ export class EqualTemperamentIntonation {
 
   constructor(A?: number) { this.A = A ?? 440 }
 
-  private _intervalToCents(f1: number, f2: number): number { return 1200 * Math.log2(f2 / f1) }
+  intervalToCents(f1: number, f2: number): number { return 1200 * Math.log2(f2 / f1) }
 
   calculateIntonation(f: number): Pitch {
     if (f === -1) {
@@ -25,8 +25,7 @@ export class EqualTemperamentIntonation {
       }
     }
 
-
-    let cents = this._intervalToCents(this.A, f)
+    let cents = this.intervalToCents(this.A, f)
     let octaveLabel = 4
 
     while (cents > this.OCTAVE_MAX) {
