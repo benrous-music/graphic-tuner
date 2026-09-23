@@ -12,7 +12,7 @@ function precision(n: number): number {
 }
 
 
-export default function PitchReadout(props: {
+export function PitchReadout(props: {
   pitch: Pitch,
   setPitch: React.Dispatch<React.SetStateAction<Pitch>>,
   intonation: EqualTemperamentIntonation
@@ -76,13 +76,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     height: '100%',
+    width: '5%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ecf0f1',
     padding: 10,
   },
   text: {
-    width: 120,
+    width: '5%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
