@@ -21,7 +21,9 @@ export class EqualTemperamentIntonation {
         pitchClass: "",
         octave: -1,
         intonation: -51,
-        intonationDirection: ""
+        intonationDirection: "",
+        isFlat: false,
+        isSharp: false,
       }
     }
 
@@ -54,7 +56,9 @@ export class EqualTemperamentIntonation {
       pitchClass: this.PITCHES[pitchIndex],
       octave: octaveLabel,
       intonation: Math.abs(intonation),
-      intonationDirection: intonationDirection
+      intonationDirection: intonationDirection,
+      isFlat: intonation < 0,
+      isSharp: intonation > 0
     }
   }
 }

@@ -4,4 +4,6 @@ export interface Pitch {
   octave: number
   intonation: number
   intonationDirection: string
+  isFlat: boolean
+  isSharp: boolean
 }
