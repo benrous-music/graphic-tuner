@@ -15,7 +15,8 @@ function precision(n: number): number {
 export function PitchReadout(props: {
   pitch: Pitch,
   setPitch: React.Dispatch<React.SetStateAction<Pitch>>,
-  intonation: EqualTemperamentIntonation
+  intonation: EqualTemperamentIntonation,
+  display?: boolean
 }) {
   const [pitch, setPitch] = [props.pitch, props.setPitch]
   const intonation = props.intonation
@@ -47,7 +48,7 @@ export function PitchReadout(props: {
       })
   }, [])
 
-  return (
+  return props.display && (
     <View style={styles.container}>
       <View>
         <View style={styles.text}>

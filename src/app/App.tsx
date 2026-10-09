@@ -12,8 +12,8 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <PitchReadout intonation={intonation} pitch={pitch} setPitch={setPitch}/>
       <Graph  pitch={pitch} setPitch={setPitch}/>
+      <PitchReadout intonation={intonation} pitch={pitch} setPitch={setPitch}/>
     </View>
   );
 }

@@ -1,21 +1,11 @@
 import { Pitch } from "@/pitch-processing/tuning/types";
 import { StyleSheet, View } from "react-native";
+import { GRADIENT, inTuneTolerance } from "./setup";
 
 const VBOX_W = 100;
 const VBOX_H = 1028;
 
-const COLOR_GRADIENT = [
-  { r: 128, g: 56,  b: 131, position: 0.00 },
-  { r: 255, g: 47,  b: 47,  position: 0.10 },
-  { r: 255, g: 217, b: 0,   position: 0.35 },
-  { r: 255, g: 255, b: 0,   position: 0.43 }, // position = 0.5 - sensitivity
-  { r: 208, g: 255, b: 0,   position: 0.45 }, // position = 0.5 - sensitivity + interval
-  { r: 0,   g: 255, b: 47,  position: 0.50 },
-  { r: 43,  g: 231, b: 231, position: 0.55 },
-  { r: 128, g: 56,  b: 131, position: 1.00 }
-]
-
-function constructGradientStyle(gradient: {r: number, g: number, b: number, position: number}[]): string {
+export function constructGradientStyle(gradient: {r: number, g: number, b: number, position: number}[]): string {
   const colorList = gradient
     .map(color => {
       const rr = color.r.toString(16).padStart(2, '0')
@@ -28,8 +18,8 @@ function constructGradientStyle(gradient: {r: number, g: number, b: number, posi
 }
 
 export function gradientValByPosition(position: number): string {
-  const floor = COLOR_GRADIENT.findLast(value => value.position < position)
-  const ceil = COLOR_GRADIENT.toReversed().findLast(value => value.position > position)
+  const floor = GRADIENT.findLast(value => value.position < position)
+  const ceil = GRADIENT.toReversed().findLast(value => value.position > position)
 
   if (!floor || !ceil) { return "#000000" }
 
@@ -55,28 +45,46 @@ export function gradientValByPitch(pitch: Pitch) {
 
 
 export function ColorBar(props: { pitch: Pitch }) {
-  const thickness = 4
-  const yPos = VBOX_H - ( VBOX_H * intonationProportionFromPitch(props.pitch) - thickness / 2)
+  const scrollThickness = 4
+  const scrollYPos = VBOX_H - ( VBOX_H * intonationProportionFromPitch(props.pitch) - scrollThickness / 2)
+
+  const toleranceThickness = 0
 
   return (
     <View style={styles.colorBar}>
       <svg viewBox={`0 0 ${VBOX_W} ${VBOX_H}`} xmlns="http://www.w3.org/2000/svg">
-        <rect x={0} y={yPos} width={VBOX_W} height={10} fill="white"/>
+        <rect
+          x={0}
+          y={VBOX_H / 2 + VBOX_H * inTuneTolerance - toleranceThickness / 2}
+          height={toleranceThickness}
+          width={VBOX_W}
+          fill="black"
+        />
+        <rect
+          x={0}
+          y={VBOX_H / 2 - VBOX_H * inTuneTolerance + toleranceThickness / 2}
+          height={toleranceThickness}
+          width={VBOX_W}
+          fill="black"
+        />
+        <rect
+          x={0}
+          y={VBOX_H / 2 - toleranceThickness / 2}
+          height={1}
+          width={VBOX_W}
+          fill="black"
+        />
+
+        <rect x={0} y={scrollYPos} width={VBOX_W} height={scrollThickness} fill="white"/>
       </svg>
     </View>
   )
 }
 
-const sensitivity = 7
-const interval = sensitivity / 2
-
-// TODO: make sensitivity dictate position of the stop between green and yellow
-// TODO: dynamically change boundary between green and teal
-
 const styles = StyleSheet.create({
   colorBar: {
     height: '100%',
     width: '5%',
-    backgroundImage: constructGradientStyle(COLOR_GRADIENT)
+    backgroundImage: constructGradientStyle(GRADIENT)
   }
 })

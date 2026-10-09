@@ -114,11 +114,9 @@ export function PitchFrame(props: PitchProps) {
 
         {
           math.range(-2400, 3600, CENTS_INCREMENT)
-            .map((cents, ix) => {
-              return (
-                <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
-              )
-            })
+            .map((cents, ix) => (
+              <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
+            ))
         }
 
         <rect x={scrollBarX} y={VBOX_H - 5} width={0.5} height={5}/>
