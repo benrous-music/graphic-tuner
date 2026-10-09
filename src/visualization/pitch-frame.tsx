@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { gradientValByPitch } from "./color-bar";
 import * as math from "./math";
+import { GRADIENT } from "./setup";
 import { PitchProps } from "./types";
 
 const VBOX_W = 500;
@@ -12,6 +13,7 @@ const MIN_FREQ = 120;
 const MAX_FREQ = 1200;
 
 const READING_INCREMENT = 1;
+const CENTS_INCREMENT = 100;
 
 export function PitchFrame(props: PitchProps) {
   const REFERENCE_FREQ = intonation.A;
@@ -68,8 +70,22 @@ export function PitchFrame(props: PitchProps) {
   return (
     <View style={styles.container}>
       <svg viewBox={`0 0 ${VBOX_W} ${VBOX_H}`} xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="GradientWindow" gradientTransform="rotate(90)">
+            {
+              GRADIENT.map((stop, ix) => (
+                <stop
+                  key={ix}
+                  offset={`${stop.position*100}%`}
+                  stopColor={`rgb(${stop.r}, ${stop.g}, ${stop.b})`}
+                />
+              ))
+            }
+          </linearGradient>
+        </defs>
+
         {
-          math.range(-2400, 3600, 100)
+          math.range(-2400, 3600, CENTS_INCREMENT)
             .map((cents, ix) => {
               return (
                 <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
