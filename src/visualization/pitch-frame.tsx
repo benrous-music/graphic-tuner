@@ -1,7 +1,6 @@
 import { intonation } from "@/app/App";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { gradientValByPitch } from "./color-bar";
 import * as math from "./math";
 import { GRADIENT } from "./setup";
 import { PitchProps } from "./types";
@@ -102,6 +101,17 @@ export function PitchFrame(props: PitchProps) {
           })
         }
 
+        <g style={{ mixBlendMode: "screen" }}>
+          <rect x={0} y={0} width={VBOX_W} height={VBOX_H} fill="white"/>
+          <path d={path} stroke="black" strokeWidth={0.5} fill="none"/>
+          {
+            pitchPointY > 0 && (
+              <circle r={1} cx={scrollBarX} cy={pitchPointY} fill="black"/> // fill={gradientValByPitch(props.pitch)}
+            )
+          }
+        </g>
+
+
         {
           math.range(-2400, 3600, CENTS_INCREMENT)
             .map((cents, ix) => {
@@ -111,13 +121,7 @@ export function PitchFrame(props: PitchProps) {
             })
         }
 
-        <path d={path} stroke="black" strokeWidth={0.5} fill="none"/>
         <rect x={scrollBarX} y={VBOX_H - 5} width={0.5} height={5}/>
-        {
-          pitchPointY > 0 && (
-            <circle r={1} cx={scrollBarX} cy={pitchPointY} fill={gradientValByPitch(props.pitch)}/>
-          )
-        }
       </svg>
     </View>
   )
