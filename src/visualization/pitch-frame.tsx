@@ -86,6 +86,24 @@ export function PitchFrame(props: PitchProps) {
 
         {
           math.range(-2400, 3600, CENTS_INCREMENT)
+          .map((cents, ix) => {
+            const gradientWindowHeight = calculateYFromCents(0) - calculateYFromCents(CENTS_INCREMENT)
+            
+            return (
+              <rect
+                key={ix}
+                x={0}
+                y={calculateYFromCents(cents)}
+                width={VBOX_W}
+                height={gradientWindowHeight}
+                fill="url(#GradientWindow)"
+              />
+            )
+          })
+        }
+
+        {
+          math.range(-2400, 3600, CENTS_INCREMENT)
             .map((cents, ix) => {
               return (
                 <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
