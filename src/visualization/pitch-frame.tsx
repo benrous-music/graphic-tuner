@@ -6,7 +6,6 @@ import { GRADIENT } from "./setup";
 import { PitchProps } from "./types";
 
 const VBOX_W = 500;
-const VBOX_H = 270;
 
 const MIN_FREQ = 120;
 const MAX_FREQ = 1200;
@@ -15,12 +14,14 @@ const READING_INCREMENT = 1;
 const CENTS_INCREMENT = 100;
 
 export function PitchFrame(props: PitchProps) {
+  const VBOX_H = VBOX_W * window.innerHeight / window.innerWidth
+
   const REFERENCE_FREQ = intonation.A;
   const CENTS_MIN = intonation.intervalToCents(REFERENCE_FREQ, MIN_FREQ)
   const CENTS_MAX = intonation.intervalToCents(REFERENCE_FREQ, MAX_FREQ)
   
   const [scrollBarX, setScrollBarX] = useState<number>(0)
-  const [yValues, setYValues] = useState<number[]>([])
+  const [pitches, setPitches] = useState<number[]>([])
   const [path, setPath] = useState<string>("")
 
 
@@ -36,7 +37,7 @@ export function PitchFrame(props: PitchProps) {
 
 
 
-  const getPointsFromYValues = () => {
+  const getPointsFromYValues = (yValues: number[]) => {
     const points = yValues
       .map((value, ix) => {
         return `${
@@ -49,19 +50,24 @@ export function PitchFrame(props: PitchProps) {
     
     return `${points.charAt(0) === 'M' ? '' : 'M '}${points}`
   }
+
+  const getPointsFromPitches = () => {
+    const yVals = pitches.map(pitch => calculateYFromFreq(pitch))
+    return getPointsFromYValues(yVals)
+  }
   
 
   useEffect(() => {
     if (scrollBarX > VBOX_W) {
       setScrollBarX(0)
-      setYValues([])
+      setPitches([])
     } else {
       setScrollBarX(scrollBarX + READING_INCREMENT)
-      yValues.push(!Number.isNaN(pitchPointY) ? pitchPointY : -1)
-      setYValues(yValues)
+      pitches.push(props.pitch.frequency)
+      setPitches(pitches)
     }
     
-    setPath(getPointsFromYValues())
+    setPath(getPointsFromPitches())
   }, [props.pitch.frequency])
 
 
@@ -127,7 +133,7 @@ export function PitchFrame(props: PitchProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: '94.4%',
     width: '95%',
     borderColor: '#000',
     borderWidth: 2,
