@@ -7,26 +7,45 @@ import { PitchProps } from "./types";
 
 const VBOX_W = 500;
 
-const MIN_FREQ = 120;
-const MAX_FREQ = 1200;
+const DEFAULT_FREQ_FLOOR = 261.6256;
+const DEFAULT_FREQ_CEIL = 523.2511;
+const HARD_FREQ_FLOOR = 120;
+const HARD_FREQ_CEIL = 2000;
+
 
 const READING_INCREMENT = 1;
 const CENTS_INCREMENT = 100;
+const WINDOW_HEIGHT_PADDING = 50; // cents
 
 export function PitchFrame(props: PitchProps) {
   const VBOX_H = VBOX_W * window.innerHeight / window.innerWidth
 
-  const REFERENCE_FREQ = intonation.A;
-  const CENTS_MIN = intonation.intervalToCents(REFERENCE_FREQ, MIN_FREQ)
-  const CENTS_MAX = intonation.intervalToCents(REFERENCE_FREQ, MAX_FREQ)
-  
+  const REFERENCE_FREQ = intonation.A
+  const [centsFloor, setCentsFloor] = useState<number>(intonation.intervalToCents(REFERENCE_FREQ, DEFAULT_FREQ_FLOOR))
+  const [centsCeil, setCentsCeil] = useState<number>(intonation.intervalToCents(REFERENCE_FREQ, DEFAULT_FREQ_CEIL))
+
+
+  const recalculateWindowHeight = (newPitch: number) => {
+    if (newPitch > HARD_FREQ_CEIL || newPitch < HARD_FREQ_FLOOR) { return }
+
+    const newCents = intonation.intervalToCents(REFERENCE_FREQ, newPitch)
+
+    if (newCents < centsFloor) { setCentsFloor(newCents - WINDOW_HEIGHT_PADDING) }
+    if (newCents > centsCeil) { setCentsCeil(newCents + WINDOW_HEIGHT_PADDING) }
+  }
+  const resetWindowHeight = () => {
+    setCentsFloor(intonation.intervalToCents(REFERENCE_FREQ, DEFAULT_FREQ_FLOOR))
+    setCentsCeil(intonation.intervalToCents(REFERENCE_FREQ, DEFAULT_FREQ_CEIL))
+  }
+
+
   const [scrollBarX, setScrollBarX] = useState<number>(0)
   const [pitches, setPitches] = useState<number[]>([])
   const [path, setPath] = useState<string>("")
 
 
   const calculateYFromCents = (cents: number) => {
-    const yValue = ((cents - CENTS_MIN) / (CENTS_MAX - CENTS_MIN)) * (-1 * VBOX_H) + VBOX_H
+    const yValue = ((cents - centsFloor) / (centsCeil - centsFloor)) * (-1 * VBOX_H) + VBOX_H
     return Number.isNaN(yValue) ? -1 : yValue
   }
   const calculateYFromFreq = (freq: number) => {
@@ -61,10 +80,12 @@ export function PitchFrame(props: PitchProps) {
     if (scrollBarX > VBOX_W) {
       setScrollBarX(0)
       setPitches([])
+      resetWindowHeight()
     } else {
       setScrollBarX(scrollBarX + READING_INCREMENT)
       pitches.push(props.pitch.frequency)
       setPitches(pitches)
+      recalculateWindowHeight(props.pitch.frequency)
     }
     
     setPath(getPointsFromPitches())
@@ -90,7 +111,7 @@ export function PitchFrame(props: PitchProps) {
         </defs>
 
         {
-          math.range(-2400, 3600, CENTS_INCREMENT)
+          math.range(-2000, 4000, CENTS_INCREMENT)
           .map((cents, ix) => {
             const gradientWindowHeight = calculateYFromCents(0) - calculateYFromCents(CENTS_INCREMENT)
             
@@ -119,7 +140,7 @@ export function PitchFrame(props: PitchProps) {
 
 
         {
-          math.range(-2400, 3600, CENTS_INCREMENT)
+          math.range(-3000, 4000, CENTS_INCREMENT)
             .map((cents, ix) => (
               <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
             ))
