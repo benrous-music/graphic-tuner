@@ -1,21 +1,22 @@
 import { intonation } from "@/app/App";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import config from "../config.json";
 import * as math from "./math";
 import { GRADIENT } from "./setup";
 import { PitchProps } from "./types";
 
 const VBOX_W = 500;
 
-const DEFAULT_FREQ_FLOOR = 261.6256;
-const DEFAULT_FREQ_CEIL = 523.2511;
-const HARD_FREQ_FLOOR = 120;
-const HARD_FREQ_CEIL = 2000;
+const DEFAULT_FREQ_FLOOR = config.visualizer.defaultFrequencyRange[0];
+const DEFAULT_FREQ_CEIL = config.visualizer.defaultFrequencyRange[1];
+const HARD_FREQ_FLOOR = config.visualizer.limitedRrequencyRange[0];
+const HARD_FREQ_CEIL = config.visualizer.limitedRrequencyRange[1];
 
 
 const READING_INCREMENT = 1;
 const CENTS_INCREMENT = 100;
-const WINDOW_HEIGHT_PADDING = 50; // cents
+const WINDOW_HEIGHT_PADDING = config.visualizer.centsAroundPitchExtrema;
 
 export function PitchFrame(props: PitchProps) {
   const VBOX_H = VBOX_W * window.innerHeight / window.innerWidth
@@ -154,7 +155,7 @@ export function PitchFrame(props: PitchProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: '94.4%',
+    height: `${config.visualizer.domHeightPct}%`,
     width: '95%',
     borderColor: '#000',
     borderWidth: 2,

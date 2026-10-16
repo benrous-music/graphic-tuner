@@ -1,0 +1,10 @@
+{
+  "visualizer": {
+    "defaultFrequencyRange": [261.6256, 523.2511],
+    "limitedRrequencyRange": [120, 2000],
+    "pitchLineCentsRange": [-3000, 4000],
+    "centsAroundPitchExtrema": 50,
+    "pitchReadingHorizontalSpacing": 1,
+    "domHeightPct": 94.4
+  }
+}
