@@ -83,7 +83,7 @@ export function ColorBar(props: { pitch: Pitch }) {
 
 const styles = StyleSheet.create({
   colorBar: {
-    height: '100%',
+    height: '94.4%',
     width: '5%',
     backgroundImage: constructGradientStyle(GRADIENT)
   }

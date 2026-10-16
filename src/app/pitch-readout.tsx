@@ -7,8 +7,9 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const DECIMAL_PLACES = 2
 
-function precision(n: number): number {
-  return Math.round(n * (10 ** DECIMAL_PLACES)) / (10 ** DECIMAL_PLACES)
+function precision(n: number, places?: number): number {
+  const decimalPlaces = places ?? DECIMAL_PLACES
+  return Math.round(n * (10 ** decimalPlaces)) / (10 ** decimalPlaces)
 }
 
 
@@ -53,7 +54,7 @@ export function PitchReadout(props: {
       <View>
         <View style={styles.text}>
           <Text>{precision(pitch.frequency)}</Text>
-          <Text>hz</Text>
+          <Text>&nbsp;hz</Text>
         </View>
         <View style={styles.text}>
           <Text>{pitch.pitchClass}{pitch.octave}</Text>
@@ -62,8 +63,10 @@ export function PitchReadout(props: {
           {
             pitch.intonation && (
               <>
-                <Text>{precision(pitch.intonation)}</Text>
-                <Text>cents {pitch.intonationDirection}</Text>
+                <Text>{precision(pitch.intonation, 0)}</Text>
+                <Text>
+                  ¢&nbsp;{pitch.intonationDirection === "flat" ? '-' : ''}{pitch.intonationDirection === "sharp" ? '+' : ''}
+                </Text>
               </>
             )
           }

@@ -13,7 +13,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Graph  pitch={pitch} setPitch={setPitch}/>
-      <PitchReadout intonation={intonation} pitch={pitch} setPitch={setPitch}/>
+      <PitchReadout intonation={intonation} pitch={pitch} setPitch={setPitch} display/>
     </View>
   );
 }
