@@ -1,6 +1,5 @@
 import { intonation } from "@/app/App";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
 import config from "../config.json";
 import * as math from "./math";
 import { GRADIENT } from "./setup";
@@ -95,80 +94,66 @@ export function PitchFrame(props: PitchProps) {
 
 
   return (
-    <View style={styles.container}>
-      <svg viewBox={`0 0 ${VBOX_W} ${VBOX_H}`} xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="GradientWindow" gradientTransform="rotate(90)">
-            {
-              GRADIENT.map((stop, ix) => (
-                <stop
-                  key={ix}
-                  offset={`${stop.position*100}%`}
-                  stopColor={`rgb(${stop.r}, ${stop.g}, ${stop.b})`}
-                />
-              ))
-            }
-          </linearGradient>
-        </defs>
-
-        {
-          math.range(-2000 + CENTS_INCREMENT / 2, 4000 - CENTS_INCREMENT / 2, CENTS_INCREMENT)
-          .map((cents, ix) => {
-            const gradientWindowHeight = calculateYFromCents(0) - calculateYFromCents(CENTS_INCREMENT)
-            
-            return (
-              <rect
-                key={ix}
-                x={0}
-                y={calculateYFromCents(cents)}
-                width={VBOX_W}
-                height={gradientWindowHeight}
-                fill="url(#GradientWindow)"
-              />
-            )
-          })
-        }
-
-        <g style={{ mixBlendMode: "screen" }}>
-          <rect x={0} y={0} width={VBOX_W} height={VBOX_H} fill="white"/>
-          <path d={path} stroke="black" strokeWidth={1} fill="none"/>
+    <svg viewBox={`0 0 ${VBOX_W} ${VBOX_H}`} xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="GradientWindow" gradientTransform="rotate(90)">
           {
-            pitchPointY > 0 && (
-              <circle r={1} cx={scrollBarX} cy={pitchPointY} fill="black"/> // fill={gradientValByPitch(props.pitch)}
-            )
-          }
-        </g>
-
-
-        {
-          math.range(-3000, 4000, CENTS_INCREMENT)
-            .map((cents, ix) => (
-              <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
+            GRADIENT.map((stop, ix) => (
+              <stop
+                key={ix}
+                offset={`${stop.position*100}%`}
+                stopColor={`rgb(${stop.r}, ${stop.g}, ${stop.b})`}
+              />
             ))
+          }
+        </linearGradient>
+      </defs>
+
+      {
+        math.range(-2000 + CENTS_INCREMENT / 2, 4000 - CENTS_INCREMENT / 2, CENTS_INCREMENT)
+        .map((cents, ix) => {
+          const gradientWindowHeight = calculateYFromCents(0) - calculateYFromCents(CENTS_INCREMENT)
+          
+          return (
+            <rect
+              key={ix}
+              x={0}
+              y={calculateYFromCents(cents)}
+              width={VBOX_W}
+              height={gradientWindowHeight}
+              fill="url(#GradientWindow)"
+            />
+          )
+        })
+      }
+
+      <g style={{ mixBlendMode: "screen" }}>
+        <rect x={0} y={0} width={VBOX_W} height={VBOX_H} fill="white"/>
+        <path d={path} stroke="black" strokeWidth={1} fill="none"/>
+        {
+          pitchPointY > 0 && (
+            <circle r={1} cx={scrollBarX} cy={pitchPointY} fill="black"/> // fill={gradientValByPitch(props.pitch)}
+          )
         }
+      </g>
 
-        <rect x={scrollBarX} y={VBOX_H - 5} width={0.5} height={5}/>
 
-        <rect
-          x={0} y={0}
-          width={VBOX_W} height={VBOX_H}
-          fill="#00000000"
-          stroke="#000"
-          strokeWidth={3}
-        />
-      </svg>
-    </View>
+      {
+        math.range(-3000, 4000, CENTS_INCREMENT)
+          .map((cents, ix) => (
+            <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
+          ))
+      }
+
+      <rect x={scrollBarX} y={VBOX_H - 5} width={0.5} height={5}/>
+
+      <rect
+        x={0} y={0}
+        width={VBOX_W} height={VBOX_H}
+        fill="#00000000"
+        stroke="#000"
+        strokeWidth={3}
+      />
+    </svg>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: `${config.visualizer.domHeightPct}%`,
-    width: '95%',
-    borderColor: '#000',
-    borderWidth: 2,
-    borderRadius: 8,
-    textAlign: 'center',
-    textAlignVertical: 'center'
-  }
-})
