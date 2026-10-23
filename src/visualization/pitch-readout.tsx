@@ -13,7 +13,7 @@ export function PitchReadout(props: { pitch: Pitch }) {
     frequency = precision(props.pitch.frequency, 0)
   }
   
-  return isReading && (
+  return (
     <>
       <View style={styles.pitchDisplay}>
         <Text>
