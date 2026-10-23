@@ -112,7 +112,7 @@ export function PitchFrame(props: PitchProps) {
         </defs>
 
         {
-          math.range(-2000, 4000, CENTS_INCREMENT)
+          math.range(-2000 + CENTS_INCREMENT / 2, 4000 - CENTS_INCREMENT / 2, CENTS_INCREMENT)
           .map((cents, ix) => {
             const gradientWindowHeight = calculateYFromCents(0) - calculateYFromCents(CENTS_INCREMENT)
             
@@ -131,7 +131,7 @@ export function PitchFrame(props: PitchProps) {
 
         <g style={{ mixBlendMode: "screen" }}>
           <rect x={0} y={0} width={VBOX_W} height={VBOX_H} fill="white"/>
-          <path d={path} stroke="black" strokeWidth={0.5} fill="none"/>
+          <path d={path} stroke="black" strokeWidth={1} fill="none"/>
           {
             pitchPointY > 0 && (
               <circle r={1} cx={scrollBarX} cy={pitchPointY} fill="black"/> // fill={gradientValByPitch(props.pitch)}
@@ -148,6 +148,14 @@ export function PitchFrame(props: PitchProps) {
         }
 
         <rect x={scrollBarX} y={VBOX_H - 5} width={0.5} height={5}/>
+
+        <rect
+          x={0} y={0}
+          width={VBOX_W} height={VBOX_H}
+          fill="#00000000"
+          stroke="#000"
+          strokeWidth={3}
+        />
       </svg>
     </View>
   )
@@ -159,6 +167,7 @@ const styles = StyleSheet.create({
     width: '95%',
     borderColor: '#000',
     borderWidth: 2,
+    borderRadius: 8,
     textAlign: 'center',
     textAlignVertical: 'center'
   }

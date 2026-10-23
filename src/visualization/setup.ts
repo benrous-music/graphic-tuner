@@ -1,4 +1,4 @@
-export const inTuneTolerance = 0.04
+export const inTuneTolerance = 0.08
 
 export const GRADIENT = [
   { r: 128, g: 56,  b: 131, position: 0.00 },

@@ -1,6 +1,5 @@
 import { Pitch } from "@/pitch-processing/tuning/types";
 import { StyleSheet, View } from "react-native";
-import config from "../config.json";
 import { GRADIENT, inTuneTolerance } from "./setup";
 
 const VBOX_W = 100;
@@ -84,8 +83,10 @@ export function ColorBar(props: { pitch: Pitch }) {
 
 const styles = StyleSheet.create({
   colorBar: {
-    height: `${config.visualizer.domHeightPct}%`,
+    // height: `${config.visualizer.domHeightPct}%`,
+    height: '80%',
     width: '5%',
-    backgroundImage: constructGradientStyle(GRADIENT)
+    backgroundImage: constructGradientStyle(GRADIENT),
+    borderRadius: 8
   }
 })
