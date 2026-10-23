@@ -3,7 +3,7 @@ import { Pitch } from '@/pitch-processing/tuning/types';
 import { Graph } from '@/visualization/graph';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { PitchReadout } from './pitch-readout';
+import { RealtimePitchProcessor } from './pitch-processor';
 
 export const intonation = new EqualTemperamentIntonation(440)
 
@@ -11,22 +11,21 @@ export default function App() {
   const [pitch, setPitch] = useState<Pitch>(intonation.calculateIntonation(-1))
 
   return (
-    <View style={styles.container}>
-      <Graph  pitch={pitch} setPitch={setPitch}/>
-      <PitchReadout intonation={intonation} pitch={pitch} setPitch={setPitch} display/>
-    </View>
+    <>
+      <RealtimePitchProcessor intonation={intonation} pitch={pitch} setPitch={setPitch}/>
+      <View style={styles.container}>
+        <Graph pitch={pitch} setPitch={setPitch}/>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: '100%',
     width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    alignContent: 'center',
     backgroundColor: '#ecf0f1',
   }
 });
