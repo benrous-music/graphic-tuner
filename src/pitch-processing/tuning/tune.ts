@@ -8,7 +8,7 @@ export class EqualTemperamentIntonation {
   OCTAVE_MAX: number = 1100 + this.PITCH_CLASS_MAX
   A: number
 
-  PITCHES: string[] = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
+  PITCHES: string[] = ["A", "B♭", "B", "C", "D♭", "D", "E♭", "E", "F", "G♭", "G", "A♭"]
 
   constructor(A?: number) { this.A = A ?? 440 }
 
