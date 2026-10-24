@@ -3,7 +3,7 @@ import { Pitch } from '@/pitch-processing/tuning/types';
 import { Graph } from '@/visualization/graph';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { RealtimePitchProcessor } from './pitch-processor';
+import { RealtimePitchProcessor } from '../pitch-processing/pitch-processor';
 
 export const intonation = new EqualTemperamentIntonation(440)
 
