@@ -50,42 +50,30 @@ export function ColorBar(props: { pitch: Pitch }) {
   const toleranceThickness = 0
 
   return (
-    // <View style={styles.colorBar}>
-      <svg viewBox={`0 0 ${VBOX_W} ${VBOX_H}`} xmlns="http://www.w3.org/2000/svg">
-        <rect
-          x={0}
-          y={VBOX_H / 2 + VBOX_H * inTuneTolerance - toleranceThickness / 2}
-          height={toleranceThickness}
-          width={VBOX_W}
-          fill="black"
-        />
-        <rect
-          x={0}
-          y={VBOX_H / 2 - VBOX_H * inTuneTolerance + toleranceThickness / 2}
-          height={toleranceThickness}
-          width={VBOX_W}
-          fill="black"
-        />
-        <rect
-          x={0}
-          y={VBOX_H / 2 - toleranceThickness / 2}
-          height={1}
-          width={VBOX_W}
-          fill="black"
-        />
+    <svg viewBox={`0 0 ${VBOX_W} ${VBOX_H}`} xmlns="http://www.w3.org/2000/svg">
+      <rect
+        x={0}
+        y={VBOX_H / 2 + VBOX_H * inTuneTolerance - toleranceThickness / 2}
+        height={toleranceThickness}
+        width={VBOX_W}
+        fill="black"
+      />
+      <rect
+        x={0}
+        y={VBOX_H / 2 - VBOX_H * inTuneTolerance + toleranceThickness / 2}
+        height={toleranceThickness}
+        width={VBOX_W}
+        fill="black"
+      />
+      <rect
+        x={0}
+        y={VBOX_H / 2 - toleranceThickness / 2}
+        height={1}
+        width={VBOX_W}
+        fill="black"
+      />
 
-        <rect x={0} y={scrollYPos} width={VBOX_W} height={scrollThickness} fill="white"/>
-      </svg>
-    // </View>
+      <rect x={0} y={scrollYPos} width={VBOX_W} height={scrollThickness} fill="white"/>
+    </svg>
   )
 }
-
-// const styles = StyleSheet.create({
-//   colorBar: {
-//     // height: `${config.visualizer.domHeightPct}%`,
-//     height: '80%',
-//     width: '5%',
-//     backgroundImage: constructGradientStyle(GRADIENT),
-//     borderRadius: 8
-//   }
-// })
