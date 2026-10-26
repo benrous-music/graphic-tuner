@@ -16,6 +16,7 @@ const HARD_FREQ_CEIL = config.visualizer.limitedRrequencyRange[1];
 const READING_INCREMENT = 1;
 const CENTS_INCREMENT = 100;
 const WINDOW_HEIGHT_PADDING = config.visualizer.centsAroundPitchExtrema;
+const PITCH_LINE_X_OFFSET = 11;
 
 export function PitchFrame(props: PitchProps) {
   const VBOX_H = VBOX_W * window.innerHeight / window.innerWidth
@@ -39,7 +40,7 @@ export function PitchFrame(props: PitchProps) {
   }
 
 
-  const [scrollBarX, setScrollBarX] = useState<number>(0)
+  const [scrollBarX, setScrollBarX] = useState<number>(PITCH_LINE_X_OFFSET)
   const [pitches, setPitches] = useState<number[]>([])
   const [path, setPath] = useState<string>("")
 
@@ -63,7 +64,7 @@ export function PitchFrame(props: PitchProps) {
           (value === -1 || yValues.at(ix - 1) === -1)
            ?
           'M ': ''
-        }${READING_INCREMENT * ix} ${value}`
+        }${READING_INCREMENT * ix + PITCH_LINE_X_OFFSET} ${value}`
       })
       .join(' ')
     
@@ -78,7 +79,7 @@ export function PitchFrame(props: PitchProps) {
 
   useEffect(() => {
     if (scrollBarX > VBOX_W) {
-      setScrollBarX(0)
+      setScrollBarX(PITCH_LINE_X_OFFSET)
       setPitches([])
       resetWindowHeight()
     } else {
@@ -137,12 +138,20 @@ export function PitchFrame(props: PitchProps) {
         }
       </g>
 
-
       {
         math.range(-3000, 4000, CENTS_INCREMENT)
-          .map((cents, ix) => (
-            <rect key={ix} x={0} y={calculateYFromCents(cents) - 0.1} width={VBOX_W} height={0.2}/>
-          ))
+          .map((cents, ix) => {
+            const yValue = calculateYFromCents(cents) - 0.1
+            const freq = intonation.centsToInterval(intonation.A, cents)
+            const pitch = intonation.calculateIntonation(freq)
+
+            return (
+              <g key={ix}>
+                <text x={3} y={yValue + 1.5} fontSize={4} fontStyle="italic">{pitch.pitchClass}{pitch.octave}</text>
+                <rect x={PITCH_LINE_X_OFFSET} y={yValue} width={VBOX_W} height={0.2}/>
+              </g>
+            )
+          })
       }
 
       <rect x={scrollBarX} y={VBOX_H - 5} width={0.5} height={5}/>

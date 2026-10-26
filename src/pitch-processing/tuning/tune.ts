@@ -14,6 +14,8 @@ export class EqualTemperamentIntonation {
 
   intervalToCents(f1: number, f2: number): number { return 1200 * Math.log2(f2 / f1) }
 
+  centsToInterval(f1: number, cents: number): number { return 2 ** (cents / 1200) * f1 }
+
   calculateIntonation(f: number): Pitch {
     if (f === -1) {
       return {

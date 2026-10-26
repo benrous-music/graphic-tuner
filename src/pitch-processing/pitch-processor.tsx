@@ -31,7 +31,7 @@ export function RealtimePitchProcessor(props: {
           const freq = yin(timeDomainData, { fs: audioContext.sampleRate })?.freq ?? -1;
           
           setPitch(intonation.calculateIntonation(freq))
-        }, 50)
+        }, 30)
       })
       .catch(error => {
         console.error(error)
